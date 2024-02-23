@@ -1,28 +1,26 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-
-import { useColorScheme } from '@/components/useColorScheme';
+import userStore from "@/store/userStore";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useFonts } from "expo-font";
+import { Stack, useRouter, useSegments } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect } from "react";
+import { View } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
+} from "expo-router";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+const InitialLayout = () => {
+  const { isSignedIn } = userStore();
+  const router = useRouter();
+  const segments = useSegments();
+
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
 
@@ -37,22 +35,37 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  React.useEffect(() => {
+    const inTabsGroup = segments[0] === "(tabs)";
+
+    if (!inTabsGroup) {
+      router.replace("/(tabs)/chats");
+    } else if (!isSignedIn) {
+      router.replace("/");
+    }
+  }, [isSignedIn]);
+
   if (!loaded) {
-    return null;
+    return <View />;
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="otp"
+        options={{ headerTitle: "Enter Your Phone Number", headerBackVisible: false }}
+      />
+      <Stack.Screen
+        name="verify/[phone]"
+        options={{ headerTitle: "Verify Your Phone Number", headerBackTitle: "Edit number" }}
+      />
+    </Stack>
   );
-}
+};
+
+const RootLayoutNav = () => {
+  return <InitialLayout />;
+};
+
+export default RootLayoutNav;
