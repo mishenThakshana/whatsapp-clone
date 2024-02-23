@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
@@ -12,7 +12,7 @@ import Colors from "@/constants/Colors";
 const CELL_COUNT = 6;
 
 const Phone = () => {
-  const { phone, signin } = useLocalSearchParams<{ phone: string; signin: string }>();
+  const { phone } = useLocalSearchParams();
   const [code, setCode] = React.useState("");
   const ref = useBlurOnFulfill({ value: code, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -22,13 +22,13 @@ const Phone = () => {
 
   React.useEffect(() => {
     if (code.length === 6) {
-      console.log("verify", code);
+      router.replace(`/chats`);
     }
   }, [code]);
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ headerTitle: phone }} />
+      <Stack.Screen options={{ headerTitle: phone as string }} />
       <Text style={styles.legal}>We have sent you an SMS with a code to the number above.</Text>
       <Text style={styles.legal}>
         To complete your phone number verification, please enter the 6-digit activation code.
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.primary,
-    fontSize: 18,
+    fontSize: 16,
   },
   codeFieldRoot: {
     marginTop: 20,

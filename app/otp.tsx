@@ -15,20 +15,19 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MaskInput from "react-native-mask-input";
 
-const GER_PHONE = [
+const LK_PHONE = [
   `+`,
   /\d/,
   /\d/,
   " ",
   /\d/,
   /\d/,
-  /\d/,
   " ",
   /\d/,
   /\d/,
   /\d/,
   /\d/,
-  /\d/,
+  " ",
   /\d/,
   /\d/,
   /\d/,
@@ -36,7 +35,7 @@ const GER_PHONE = [
 
 const Otp = () => {
   const [loading, setLoading] = React.useState(false);
-  const [phoneNumber, setPhoneNumber] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("+94");
   const router = useRouter();
   const keyboardVeritcalOffset = Platform.OS === "ios" ? 90 : 0;
   const { bottom } = useSafeAreaInsets();
@@ -46,11 +45,9 @@ const Otp = () => {
   const sendOtp = async () => {
     setLoading(true);
 
-    try {
+    setTimeout(() => {
       router.push(`/verify/${phoneNumber}`);
-    } catch (error) {
-      console.log(error);
-    }
+    }, 1000);
   };
 
   return (
@@ -72,7 +69,7 @@ const Otp = () => {
 
         <View style={styles.list}>
           <View style={styles.listItem}>
-            <Text style={styles.listItemTxt}>Germany</Text>
+            <Text style={styles.listItemTxt}>Sri Lanka</Text>
             <Ionicons name="chevron-forward" size={20} color={Colors.gray} />
           </View>
 
@@ -85,7 +82,7 @@ const Otp = () => {
             autoFocus
             placeholder="+12 your phone number"
             onChangeText={(masked, unmasked) => setPhoneNumber(masked)}
-            mask={GER_PHONE}
+            mask={LK_PHONE}
           />
         </View>
 

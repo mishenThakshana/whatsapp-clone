@@ -1,17 +1,12 @@
+import { View } from "react-native";
 import userStore from "@/store/userStore";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
-import { View } from "react-native";
+export { ErrorBoundary } from "expo-router";
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const InitialLayout = () => {
@@ -24,7 +19,6 @@ const InitialLayout = () => {
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -38,9 +32,9 @@ const InitialLayout = () => {
   React.useEffect(() => {
     const inTabsGroup = segments[0] === "(tabs)";
 
-    if (!inTabsGroup) {
-      router.replace("/(tabs)/chats");
-    } else if (!isSignedIn) {
+    if (isSignedIn && !inTabsGroup) {
+      router.replace("/chats");
+    } else if (!isSignedIn && inTabsGroup) {
       router.replace("/");
     }
   }, [isSignedIn]);
