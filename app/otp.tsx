@@ -47,6 +47,7 @@ const Otp = () => {
 
     setTimeout(() => {
       router.push(`/verify/${phoneNumber}`);
+      setLoading(false);
     }, 1000);
   };
 

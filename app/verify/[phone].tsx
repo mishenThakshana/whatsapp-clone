@@ -8,10 +8,12 @@ import {
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 import Colors from "@/constants/Colors";
+import userStore from "@/store/userStore";
 
 const CELL_COUNT = 6;
 
 const Phone = () => {
+  const { setIsSignedIn } = userStore();
   const { phone } = useLocalSearchParams();
   const [code, setCode] = React.useState("");
   const ref = useBlurOnFulfill({ value: code, cellCount: CELL_COUNT });
@@ -23,6 +25,7 @@ const Phone = () => {
   React.useEffect(() => {
     if (code.length === 6) {
       router.replace(`/chats`);
+      setIsSignedIn(true);
     }
   }, [code]);
 

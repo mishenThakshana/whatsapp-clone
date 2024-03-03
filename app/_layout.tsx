@@ -9,7 +9,7 @@ export { ErrorBoundary } from "expo-router";
 
 SplashScreen.preventAutoHideAsync();
 
-const InitialLayout = () => {
+const RootLayout = () => {
   const { isSignedIn } = userStore();
   const router = useRouter();
   const segments = useSegments();
@@ -23,25 +23,17 @@ const InitialLayout = () => {
     if (error) throw error;
   }, [error]);
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
   React.useEffect(() => {
     const inTabsGroup = segments[0] === "(tabs)";
 
     if (isSignedIn && !inTabsGroup) {
       router.replace("/chats");
     } else if (!isSignedIn && inTabsGroup) {
-      router.replace("/");
+      router.replace("/otp");
     }
-  }, [isSignedIn]);
 
-  if (!loaded) {
-    return <View />;
-  }
+    SplashScreen.hideAsync();
+  }, [isSignedIn, loaded]);
 
   return (
     <Stack>
@@ -54,12 +46,9 @@ const InitialLayout = () => {
         name="verify/[phone]"
         options={{ headerTitle: "Verify Your Phone Number", headerBackTitle: "Edit number" }}
       />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );
 };
 
-const RootLayoutNav = () => {
-  return <InitialLayout />;
-};
-
-export default RootLayoutNav;
+export default RootLayout;
