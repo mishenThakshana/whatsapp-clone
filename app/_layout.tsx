@@ -27,7 +27,7 @@ const RootLayout = () => {
     const inTabsGroup = segments[0] === "(tabs)";
 
     if (isSignedIn && !inTabsGroup) {
-      router.replace("/chats");
+      router.replace("/(tabs)/chats");
     } else if (!isSignedIn && inTabsGroup) {
       router.replace("/otp");
     }
